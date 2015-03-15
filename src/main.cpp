@@ -12,6 +12,8 @@ using namespace apriori;
 
 Itemset* parseLine(string& line);
 void writeTo(const vector<AssocRule*>& rules, ostream& os);
+string stringify(AssocRule& rule);
+string stringify(Itemset& items);
 
 int main(int argc, char* argv[]) {
     if (argc != 4) {
@@ -60,7 +62,45 @@ int main(int argc, char* argv[]) {
 }
 
 Itemset* parseLine(string& line) {
+    istringstream iss(line);
+    Itemset* items = new Itemset();
+    while (!iss.eof()) {
+        int itemId;
+        iss >> itemId;
+        items->insert(itemId);
+    }
+    return items;
 }
 
 void writeTo(const vector<AssocRule*>& rules, ostream& os) {
+    vector<AssocRule*>::const_iterator it;
+    for (it = rules.begin();
+         it != rules.end();
+         ++it) {
+        AssocRule& rule = **it;
+        os << stringify(rule) << endl;
+    }
+}
+
+string stringify(AssocRule& rule) {
+    ostringstream oss;
+    oss << stringify(*rule.lhs)
+        << stringify(*rule.rhs)
+        << rule.sup
+        << rule.conf;
+    return oss.str();
+}
+
+string stringify(Itemset& items) {
+    ostringstream oss;
+    Itemset::const_iterator it;
+    for (it = items.begin();
+         it != items.end();
+         ++it) {
+        if (it != items.begin()) {
+            oss << ", ";
+        }
+        oss << *it;
+    }
+    return oss.str();
 }
