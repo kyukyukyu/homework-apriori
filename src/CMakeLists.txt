@@ -1,4 +1,4 @@
-LIST(APPEND project_SRCS "main.cpp")
+FILE (GLOB_RECURSE project_SRCS *.cpp *.cxx *.cc *.C *.c *.h *.hpp)
 
 SET(project_BIN ${PROJECT_NAME})
 
