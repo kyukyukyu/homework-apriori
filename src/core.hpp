@@ -35,6 +35,10 @@ namespace apriori {
             std::vector<Table*> lList;
             std::vector<AssocRule*> rules;
             void mineFreqPatts();
+            void buildC(Table& c);
+            void buildC(Table& c, Table& l);
+            void incrementSup(Table& c, Itemset& transaction);
+            void filterTable(Table& c, Table& l);
             void mineRulesFrom(TableRow& row);
 
         public:

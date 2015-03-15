@@ -58,6 +58,44 @@ const std::vector<AssocRule*>& Apriori::mineRules() {
 }
 
 void Apriori::mineFreqPatts() {
+    Apriori::Table c = Apriori::Table();
+    Apriori::Table* l = new Apriori::Table();
+    this->buildC(c);
+
+    // initialize the list of L-table
+    this->lList.clear();
+    this->lList.push_back(nullptr);
+
+    // filter C1, build L1, and save it
+    this->filterTable(c, *l);
+    this->lList.push_back(l);
+
+    for (int k = 1; !l->empty(); ++k) {
+        this->buildC(c, *l);
+
+        vector<Itemset*>::const_iterator it;
+        for (it = this->transactions.begin();
+             it != this->transactions.end();
+             ++it) {
+            Itemset* transaction = *it;
+            this->incrementSup(c, *transaction);
+        }
+
+        l = new Apriori::Table();
+        this->filterTable(c, *l);
+    }
+}
+
+void Apriori::buildC(Apriori::Table& c) {
+}
+
+void Apriori::buildC(Apriori::Table& c, Apriori::Table& l) {
+}
+
+void Apriori::incrementSup(Apriori::Table& c, Itemset& transaction) {
+}
+
+void Apriori::filterTable(Apriori::Table& c, Apriori::Table& l) {
 }
 
 void Apriori::mineRulesFrom(Apriori::TableRow& row) {
