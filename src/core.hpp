@@ -13,6 +13,7 @@ namespace apriori {
         Itemset* rhs;
         double sup;
         double conf;
+        ~AssocRule();
     };
 
     class Apriori {
