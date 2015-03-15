@@ -10,7 +10,8 @@ AssocRule::~AssocRule() {
     delete this->rhs;
 }
 
-Apriori::Apriori(double minSup) : minSup(minSup), transactions(), rules() {}
+Apriori::Apriori(double minSup)
+    : minSup(minSup), transactions(), lList(), rules() {}
 
 Apriori::~Apriori() {
     vector<Itemset*>::iterator it1;
@@ -31,8 +32,33 @@ Apriori::~Apriori() {
 }
 
 void Apriori::add(Itemset* itemset) {
+    this->transactions.push_back(itemset);
 }
 
 const std::vector<AssocRule*>& Apriori::mineRules() {
+    vector<Table*>::const_iterator itTable;
+    this->mineFreqPatts();
+    for (itTable = this->lList.begin();
+         itTable != this->lList.end();
+         ++itTable) {
+        if (itTable == this->lList.begin()) {
+            continue;
+        }
+
+        Apriori::Table* table = *itTable;
+        Apriori::Table::const_iterator itRow;
+        for (itRow = table->begin();
+             itRow != table->end();
+             ++itRow) {
+            Apriori::TableRow* row = *itRow;
+            this->mineRulesFrom(*row);
+        }
+    }
     return this->rules;
+}
+
+void Apriori::mineFreqPatts() {
+}
+
+void Apriori::mineRulesFrom(Apriori::TableRow& row) {
 }

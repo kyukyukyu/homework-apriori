@@ -17,10 +17,25 @@ namespace apriori {
     };
 
     class Apriori {
+        struct TableRow {
+            Itemset patt;
+            int sup;
+            TableRow(Itemset& patt) : patt(patt), sup(0) {}
+        };
+
+        struct TableCompare {
+            bool operator() (const TableRow* lhs, const TableRow* rhs) const;
+        };
+
+        typedef std::set<TableRow*, TableCompare> Table;
+
         private:
             double minSup;
             std::vector<Itemset*> transactions;
+            std::vector<Table*> lList;
             std::vector<AssocRule*> rules;
+            void mineFreqPatts();
+            void mineRulesFrom(TableRow& row);
 
         public:
             Apriori(double minSup);
