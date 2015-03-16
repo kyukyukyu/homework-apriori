@@ -1,5 +1,6 @@
 #include "core.hpp"
 
+#include <map>
 #include <vector>
 
 using namespace std;
@@ -87,6 +88,39 @@ void Apriori::mineFreqPatts() {
 }
 
 void Apriori::buildC(Apriori::Table& c) {
+    c.clear();
+
+    map<int, int> sup;
+    vector<Itemset*>::const_iterator itT;
+    for (itT = this->transactions.begin();
+         itT != this->transactions.end();
+         ++itT) {
+        Itemset* transaction = *itT;
+        Itemset::const_iterator itI;
+        for (itI = transaction->begin();
+             itI != transaction->end();
+             ++itI) {
+            int item = *itI;
+            if (sup.count(item) == 0) {
+                sup[item] = 0;
+            }
+            ++sup[item];
+        }
+    }
+
+    map<int, int>::const_iterator itR;
+    for (itR = sup.begin();
+         itR != sup.end();
+         ++itR) {
+        Itemset is;
+        Apriori::TableRow* row;
+
+        is.insert(itR->first);
+        row = new Apriori::TableRow(is);
+        row->sup = itR->second;
+
+        c.insert(row);
+    }
 }
 
 void Apriori::buildC(Apriori::Table& c, Apriori::Table& l) {
@@ -99,4 +133,25 @@ void Apriori::filterTable(Apriori::Table& c, Apriori::Table& l) {
 }
 
 void Apriori::mineRulesFrom(Apriori::TableRow& row) {
+}
+
+bool Apriori::TableCompare::operator() (const Apriori::TableRow* lhs, const Apriori::TableRow* rhs) const {
+    const Itemset& isL = lhs->patt;
+    const Itemset& isR = rhs->patt;
+    Itemset::const_iterator itL = isL.begin();
+    Itemset::const_iterator itR = isR.begin();
+
+    while (itL != isL.end() && itR != isR.end()) {
+        int itemL = *itL;
+        int itemR = *itR;
+
+        if (itemL < itemR) {
+            return true;
+        }
+
+        ++itL;
+        ++itR;
+    }
+
+    return false;
 }
