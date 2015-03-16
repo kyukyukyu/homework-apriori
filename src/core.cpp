@@ -124,6 +124,49 @@ void Apriori::buildC(Apriori::Table& c) {
 }
 
 void Apriori::buildC(Apriori::Table& c, Apriori::Table& l) {
+    c.clear();
+
+    // step 1: self-joining
+    Apriori::Table::const_iterator itRowI;
+    const Apriori::Table::const_iterator itRowEnd = l.end();
+    for (itRowI = l.begin(); itRowI != itRowEnd; ++itRowI) {
+        Apriori::TableRow* rowI = *itRowI;
+        Apriori::Table::const_iterator itRowJ = itRowI;
+
+        ++itRowJ;
+        while (itRowJ != itRowEnd) {
+            Apriori::TableRow* rowJ = *itRowJ;
+
+            if (!Apriori::hasSameHead(rowI->patt, rowJ->patt)) {
+                break;
+            }
+
+            Itemset patt(rowI->patt);
+            int lastItem = *(rowJ->patt.rbegin());
+            patt.insert(lastItem);
+            c.insert(new Apriori::TableRow(patt));
+        }
+    }
+
+    // step 2: pruning
+    // TODO: implement this one
+}
+
+bool Apriori::hasSameHead(Itemset& a, Itemset& b) {
+    Itemset::const_iterator itA, itB, itLast;
+    itA = a.begin();
+    itB = b.begin();
+    itLast = a.end();
+    --itLast;
+
+    while (itA != itLast) {
+        if (*itA != *itB) {
+            return false;
+        }
+        ++itA;
+        ++itB;
+    }
+    return true;
 }
 
 void Apriori::incrementSup(Apriori::Table& c, Itemset& transaction) {

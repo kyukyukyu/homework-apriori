@@ -37,6 +37,7 @@ namespace apriori {
             void mineFreqPatts();
             void buildC(Table& c);
             void buildC(Table& c, Table& l);
+            static bool hasSameHead(Itemset& a, Itemset& b);
             void incrementSup(Table& c, Itemset& transaction);
             void filterTable(Table& c, Table& l);
             void mineRulesFrom(TableRow& row);
