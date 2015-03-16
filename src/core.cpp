@@ -149,7 +149,31 @@ void Apriori::buildC(Apriori::Table& c, Apriori::Table& l) {
     }
 
     // step 2: pruning
-    // TODO: implement this one
+    Apriori::Table::iterator itRowC = c.begin();
+    while (itRowC != c.end()) {
+        Apriori::Table::iterator currIt = itRowC++;
+        Apriori::TableRow* currRow = *currIt;
+        Itemset& patt = currRow->patt;
+        Itemset::const_iterator itItem;
+        bool isValidCandidate = true;
+
+        // generate subsets and check if all of them are in l
+        for (itItem = patt.begin(); itItem != patt.end(); ++itItem) {
+            Itemset subset(patt);
+            subset.erase(subset.find(*itItem));
+            Apriori::TableRow subsetRow(subset);
+
+            if (l.find(&subsetRow) == l.end()) {
+                // subset not found in l
+                isValidCandidate = false;
+                break;
+            }
+        }
+
+        if (!isValidCandidate) {
+            c.erase(currIt);
+        }
+    }
 }
 
 bool Apriori::hasSameHead(Itemset& a, Itemset& b) {
