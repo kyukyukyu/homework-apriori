@@ -23,11 +23,28 @@ Apriori::~Apriori() {
         delete transaction;
     }
 
-    vector<AssocRule*>::iterator it2;
-    for (it2 = this->rules.begin();
-         it2 != this->rules.end();
+    vector<Apriori::Table*>::iterator it2;
+    for (it2 = this->lList.begin();
+         it2 != this->lList.end();
          ++it2) {
-        AssocRule* rule = *it2;
+        Apriori::Table* l = *it2;
+        Apriori::Table::iterator itRow;
+
+        for (itRow = l->begin();
+             itRow != l->end();
+             ++itRow) {
+            Apriori::TableRow* row = *itRow;
+            delete row;
+        }
+
+        delete l;
+    }
+
+    vector<AssocRule*>::iterator it3;
+    for (it3 = this->rules.begin();
+         it3 != this->rules.end();
+         ++it3) {
+        AssocRule* rule = *it3;
         delete rule;
     }
 }
