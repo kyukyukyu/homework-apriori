@@ -61,6 +61,11 @@ const std::vector<AssocRule*>& Apriori::mineRules() {
 void Apriori::mineFreqPatts() {
     Apriori::Table c = Apriori::Table();
     Apriori::Table* l = new Apriori::Table();
+
+    // compute minSupCount
+    this->minSupCount = this->transactions.size() * this->minSup / 100.0;
+
+    // build C1
     this->buildC(c);
 
     // initialize the list of L-table

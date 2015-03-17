@@ -31,6 +31,7 @@ namespace apriori {
 
         private:
             double minSup;
+            int minSupCount;    // initialized in mineFreqPatts()
             std::vector<Itemset*> transactions;
             std::vector<Table*> lList;
             std::vector<AssocRule*> rules;
