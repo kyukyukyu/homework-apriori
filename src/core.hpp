@@ -42,6 +42,8 @@ namespace apriori {
             static void incrementSup(Table& c, Itemset& transaction);
             void filterTable(Table& c, Table& l);
             void mineRulesFrom(TableRow& row);
+            void makeRule(Itemset& patt, std::vector<bool>& toLhs,
+                          AssocRule& rule);
 
         public:
             Apriori(double minSup);

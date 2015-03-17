@@ -1,6 +1,7 @@
 #include "core.hpp"
 
 #include <map>
+#include <stack>
 #include <vector>
 
 using namespace std;
@@ -240,6 +241,42 @@ void Apriori::filterTable(Apriori::Table& c, Apriori::Table& l) {
 }
 
 void Apriori::mineRulesFrom(Apriori::TableRow& row) {
+    Itemset& patt = row.patt;
+    Itemset::size_type pattSize = patt.size();
+    vector<bool> toLhs(pattSize, false);
+    vector<bool>::size_type i;
+    stack<bool> isUsed;
+
+    i = 0;
+    isUsed.push(false);
+    while (!isUsed.empty()) {
+        if (i == pattSize) {
+            AssocRule* rule = new AssocRule();
+            this->makeRule(patt, toLhs, *rule);
+            this->rules.push_back(rule);
+            isUsed.pop();
+            --i;
+        }
+
+        bool top = isUsed.top();
+        if (toLhs[i] == false && top == false) {
+            toLhs[i] = false;
+            isUsed.pop();
+            isUsed.push(true);
+            isUsed.push(false);
+        } else if (toLhs[i] == false && top == true) {
+            toLhs[i] = true;
+        } else if (toLhs[i] == true && top == true) {
+            isUsed.pop();
+            --i;
+            continue;
+        }
+        ++i;
+    }
+
+}
+
+void Apriori::makeRule(Itemset& patt, std::vector<bool>& toLhs, AssocRule& rule) {
 }
 
 bool Apriori::TableCompare::operator() (const Apriori::TableRow* lhs, const Apriori::TableRow* rhs) const {
