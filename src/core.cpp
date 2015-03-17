@@ -89,6 +89,7 @@ void Apriori::mineFreqPatts() {
 
         l = new Apriori::Table();
         this->filterTable(c, *l);
+        this->lList.push_back(l);
     }
 }
 
@@ -211,6 +212,14 @@ void Apriori::incrementSup(Apriori::Table& c, Itemset& transaction) {
 }
 
 void Apriori::filterTable(Apriori::Table& c, Apriori::Table& l) {
+    Apriori::Table::const_iterator it;
+    for (it = c.begin(); it != c.end(); ++it) {
+        Apriori::TableRow* row = *it;
+
+        if (row->sup >= this->minSupCount) {
+            l.insert(row);
+        }
+    }
 }
 
 void Apriori::mineRulesFrom(Apriori::TableRow& row) {
