@@ -251,9 +251,24 @@ void Apriori::mineRulesFrom(Apriori::TableRow& row) {
     isUsed.push(false);
     while (!isUsed.empty()) {
         if (i == pattSize) {
-            AssocRule* rule = new AssocRule();
-            this->makeRule(patt, toLhs, *rule);
-            this->rules.push_back(rule);
+            vector<bool>::const_iterator it = toLhs.begin();
+            bool isAllTrue = true;
+            bool isNotAllFalse = false;
+            while (it != toLhs.end()) {
+                isAllTrue &= *it;
+                isNotAllFalse |= *it;
+
+                if (!isAllTrue && isNotAllFalse) {
+                    break;
+                }
+            }
+
+            if (!isAllTrue && isNotAllFalse) {
+                AssocRule* rule = new AssocRule();
+                this->makeRule(patt, toLhs, *rule);
+                this->rules.push_back(rule);
+            }
+
             isUsed.pop();
             --i;
         }
