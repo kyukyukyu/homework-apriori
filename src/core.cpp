@@ -194,6 +194,15 @@ bool Apriori::hasSameHead(Itemset& a, Itemset& b) {
 }
 
 void Apriori::incrementSup(Apriori::Table& c, Itemset& transaction) {
+    Apriori::Table::iterator it;
+    for (it = c.begin(); it != c.end(); ++it) {
+        TableRow* row = *it;
+        Itemset& patt = row->patt;
+        if (std::includes(transaction.begin(), transaction.end(),
+                          patt.begin(), patt.end())) {
+            ++row->sup;
+        }
+    }
 }
 
 void Apriori::filterTable(Apriori::Table& c, Apriori::Table& l) {
