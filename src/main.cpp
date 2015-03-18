@@ -39,6 +39,10 @@ int main(int argc, char* argv[]) {
         Itemset* is;
 
         getline(fin, line);
+        if (line.empty()) {
+            break;
+        }
+
         is = parseLine(line);
         apr->add(is);
     }
@@ -84,15 +88,18 @@ void writeTo(const vector<AssocRule*>& rules, ostream& os) {
 
 string stringify(AssocRule& rule) {
     ostringstream oss;
-    oss << stringify(*rule.lhs)
-        << stringify(*rule.rhs)
-        << rule.sup
-        << rule.conf;
+    oss << stringify(*rule.lhs) << '\t'
+        << stringify(*rule.rhs) << '\t'
+        << rule.sup * 100 << '\t'
+        << rule.conf * 100;
     return oss.str();
 }
 
 string stringify(Itemset& items) {
     ostringstream oss;
+
+    oss << '{';
+
     Itemset::const_iterator it;
     for (it = items.begin();
          it != items.end();
@@ -102,5 +109,8 @@ string stringify(Itemset& items) {
         }
         oss << *it;
     }
+
+    oss << '}';
+
     return oss.str();
 }
