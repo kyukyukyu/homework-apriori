@@ -292,6 +292,38 @@ void Apriori::mineRulesFrom(Apriori::TableRow& row) {
 }
 
 void Apriori::makeRule(Itemset& patt, std::vector<bool>& toLhs, AssocRule& rule) {
+    Itemset* lhs = new Itemset();
+    Itemset* rhs = new Itemset();
+    Itemset::const_iterator it;
+    Itemset::size_type pattSize = patt.size();
+    Itemset::size_type i;
+
+    for (it = patt.begin(), i = 0; i < pattSize; ++it, ++i) {
+        int item = *it;
+        if (toLhs[i] == true) {
+            lhs->insert(item);
+        } else {
+            rhs->insert(item);
+        }
+    }
+
+    Table* lLhs = this->lList[lhs->size()];
+    Table* lUnion = this->lList[patt.size()];
+    TableRow* rowTemp;
+    TableRow* rowLhs;
+    TableRow* rowUnion;
+
+    rowTemp = new TableRow(*lhs);
+    rowLhs = *(lLhs->find(rowTemp));
+    delete rowTemp;
+    rowTemp = new TableRow(patt);
+    rowUnion = *(lUnion->find(rowTemp));
+    delete rowTemp;
+
+    rule.lhs = lhs;
+    rule.rhs = rhs;
+    rule.sup = (double) rowUnion->sup / (double) this->transactions.size();
+    rule.conf = (double) rowUnion->sup / (double) rowLhs->sup;
 }
 
 bool Apriori::TableCompare::operator() (const Apriori::TableRow* lhs, const Apriori::TableRow* rhs) const {
