@@ -276,18 +276,21 @@ void Apriori::mineRulesFrom(Apriori::TableRow& row) {
         }
 
         bool top = isUsed.top();
-        if (toLhs[i] == false && top == false) {
-            toLhs[i] = false;
-            isUsed.pop();
-            isUsed.push(true);
-            isUsed.push(false);
-        } else if (toLhs[i] == false && top == true) {
-            toLhs[i] = true;
-        } else if (toLhs[i] == true && top == true) {
+
+        if (toLhs[i] == true && top == true) {
             isUsed.pop();
             --i;
             continue;
         }
+
+        if (top == false) {
+            toLhs[i] = false;
+            isUsed.pop();
+            isUsed.push(true);
+        } else if (toLhs[i] == false && top == true) {
+            toLhs[i] = true;
+        }
+        isUsed.push(false);
         ++i;
     }
 
