@@ -170,6 +170,7 @@ void Apriori::buildC(Apriori::Table& c, Apriori::Table& l) {
             int lastItem = *(rowJ->patt.rbegin());
             patt.insert(lastItem);
             c.insert(new Apriori::TableRow(patt));
+            ++itRowJ;
         }
     }
 
@@ -252,10 +253,10 @@ void Apriori::mineRulesFrom(Apriori::TableRow& row) {
     isUsed.push(false);
     while (!isUsed.empty()) {
         if (i == pattSize) {
-            vector<bool>::const_iterator it = toLhs.begin();
             bool isAllTrue = true;
             bool isNotAllFalse = false;
-            while (it != toLhs.end()) {
+            vector<bool>::const_iterator it = toLhs.begin();
+            for (it = toLhs.begin(); it != toLhs.end(); ++it) {
                 isAllTrue &= *it;
                 isNotAllFalse |= *it;
 
