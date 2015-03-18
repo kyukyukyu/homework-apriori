@@ -343,6 +343,8 @@ bool Apriori::TableCompare::operator() (const Apriori::TableRow* lhs, const Apri
 
         if (itemL < itemR) {
             return true;
+        } else if (itemL > itemR) {
+            return false;
         }
 
         ++itL;
