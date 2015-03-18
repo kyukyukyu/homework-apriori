@@ -25,7 +25,8 @@ Apriori::~Apriori() {
     }
 
     vector<Apriori::Table*>::iterator it2;
-    for (it2 = this->lList.begin();
+    // since the first element is always nullptr, advance iterator at first
+    for (it2 = ++this->lList.begin();
          it2 != this->lList.end();
          ++it2) {
         Apriori::Table* l = *it2;
