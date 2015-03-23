@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -90,8 +91,8 @@ string stringify(AssocRule& rule) {
     ostringstream oss;
     oss << stringify(*rule.lhs) << '\t'
         << stringify(*rule.rhs) << '\t'
-        << rule.sup * 100 << '\t'
-        << rule.conf * 100;
+        << std::fixed << std::setprecision(2) << rule.sup * 100 << '\t'
+        << std::fixed << std::setprecision(2) << rule.conf * 100;
     return oss.str();
 }
 
